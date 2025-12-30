@@ -1,0 +1,77 @@
+-- ~\AppData\Local\nvim\lua\plugins\completion.lua
+
+return {
+  -- nvim-cmp setup
+  {
+    'hrsh7th/nvim-cmp',
+    dependencies = {
+      'hrsh7th/cmp-nvim-lsp', -- Source for LSP suggestions
+      'hrsh7th/cmp-buffer',   -- Source for buffer words
+      'hrsh7th/cmp-path',     -- Source for file paths
+      -- Optional: Snippet engine & source
+      'L3MON4D3/LuaSnip',
+      'saadparwaiz1/cmp_luasnip',
+    },
+    config = function()
+      local cmp = require('cmp')
+      local luasnip = require('luasnip') -- If you installed LuaSnip
+
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
+        },
+        window = {
+          completion = cmp.config.window.bordered(),
+          documentation = cmp.config.window.bordered(),
+        },
+        mapping = cmp.mapping.preset.insert({
+          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+          ['<C-f>'] = cmp.mapping.scroll_docs(4),
+          ['<C-Space>'] = cmp.mapping.complete(),
+          ['<C-e>'] = cmp.mapping.abort(),
+          ['<CR>'] = cmp.mapping.confirm({ select = true }),
+          ['<Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+          ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+        }),
+        sources = cmp.config.sources({
+          { name = 'nvim_lsp' },
+          { name = 'luasnip' }, -- Add this if you installed LuaSnip
+          { name = 'buffer' },
+          { name = 'path' },
+        })
+      })
+    end,
+  },
+
+  -- Optional: Snippet Engine (if you included it above)
+  {
+    'L3MON4D3/LuaSnip',
+    -- follow latest release.
+    version = "v2.*",
+    -- build = "make install_jsregexp", -- install jsregexp (optional!)
+    dependencies = { "rafamadriz/friendly-snippets" }, -- Optional: Common snippets
+    config = function()
+      -- Optional: Load friendly-snippets
+      require("luasnip.loaders.from_vscode").lazy_load()
+    end
+  },
+  { 'saadparwaiz1/cmp_luasnip' }, -- Bridge between nvim-cmp and LuaSnip
+}
