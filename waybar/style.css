@@ -1,0 +1,28 @@
+* {
+    font-family: "JetBrainsMono Nerd Font", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+}
+
+window#waybar {
+    background-color: rgba(43, 48, 59, 0.5); /* Semi-transparent dark */
+    border-bottom: 3px solid rgba(100, 114, 125, 0.3);
+    color: #ffffff;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+#workspaces button {
+    padding: 0 5px;
+    background-color: transparent;
+    color: #ffffff;
+}
+
+#workspaces button.active {
+    background-color: #64727D;
+    border-bottom: 3px solid #ffffff;
+}
+
+#clock, #cpu, #memory, #pulseaudio, #network, #tray {
+    padding: 0 10px;
+    color: #ffffff;
+}
